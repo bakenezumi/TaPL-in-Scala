@@ -11,25 +11,26 @@ object TypelessLambda {
   // substitution [x |-> s]t defined in TaPL p. 54
   def substitution(x: TmVar, s: Term, t: Term): Term = {
     t match {
-      case y: TmVar if x==y => s
-      case y: TmVar => y
-      case TmAbs(y, t1) => TmAbs(y, substitution(x, s, t1))
-      case TmApply(t1, t2) => TmApply(substitution(x, s, t1),
-                                      substitution(x, s, t2))
+      case y: TmVar if x == y => s
+      case y: TmVar           => y
+      case TmAbs(y, t1)       => TmAbs(y, substitution(x, s, t1))
+      case TmApply(t1, t2) =>
+        TmApply(substitution(x, s, t1), substitution(x, s, t2))
     }
   }
   def evalOne(t: Term): Term =
     t match {
-      case TmApply(t1, t2) => TmApply(evalOne(t1), t2)
-      case TmApply(v: TmAbs, t2) => TmApply(v, evalOne(t2))
+      case TmApply(t1, t2)                   => TmApply(evalOne(t1), t2)
+      case TmApply(v: TmAbs, t2)             => TmApply(v, evalOne(t2))
       case TmApply(TmAbs(x, t12), v2: TmAbs) => substitution(x, v2, t12)
-      case _ => throw new NoRuleAppliesException(t)
+      case _                                 => throw new NoRuleAppliesException(t)
     }
-  def eval(t: Term): Term = try {
-    eval(evalOne(t))
-  } catch {
-    case _: NoRuleAppliesException => t
-  }
+  def eval(t: Term): Term =
+    try {
+      eval(evalOne(t))
+    } catch {
+      case _: NoRuleAppliesException => t
+    }
   def tmLambda2(x: TmVar, y: TmVar, t: Term): TmAbs = {
     TmAbs(x, TmAbs(y, t))
   }
@@ -62,9 +63,9 @@ object TypelessLambda {
 
   // charch number
   val zero = tmLambda2(f, x, x)
-  val one  = tmLambda2(f, x, TmApply(f, x))
-  val two  = tmLambda2(f, x, TmApply(f, TmApply(f, x)))
-  val three= tmLambda2(f, x, TmApply(f, TmApply(f, TmApply(f, x))))
+  val one = tmLambda2(f, x, TmApply(f, x))
+  val two = tmLambda2(f, x, TmApply(f, TmApply(f, x)))
+  val three = tmLambda2(f, x, TmApply(f, TmApply(f, TmApply(f, x))))
   val four = tmLambda2(f, x, TmApply(f, TmApply(f, TmApply(f, TmApply(f, x)))))
   def mult: Term = tmLambda2(m, n, TmApply(m, TmApply(n, f)))
   def pred: Term = {
@@ -94,6 +95,4 @@ object TypelessLambda {
     TmAbs(f, TmApply(fx1, fx2))
   }
 
-
 }
-
