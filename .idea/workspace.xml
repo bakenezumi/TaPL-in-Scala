@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="35f77e00-bd13-4c44-babb-51b4a221644d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/modules/tapl-in-scala.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/tapl-in-scala.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sbt.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sbt.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/ch03/Simplelanguage.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ch03/Simplelanguage.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scala/ch04/ML.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ch04/ML.scala" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/scala/ch03/SimpleLanguageSpec.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/scala/ch03/SimpleLanguageSpec.scala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scala/ch05/TypelessLambda.scala" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scala/ch05/TypelessLambda.scala" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -57,7 +57,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/ch03/Simplelanguage.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
+            <state relative-caret-position="1037">
               <caret line="61" selection-start-line="61" selection-end-line="61" />
             </state>
           </provider>
@@ -66,7 +66,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/test/scala/ch03/SimpleLanguageSpec.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1506">
+            <state relative-caret-position="2941">
               <caret line="176" selection-start-line="176" selection-end-line="176" />
               <folding>
                 <element signature="e#14#67#0" expanded="true" />
@@ -75,11 +75,29 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/scala/ch04/ML.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="197">
-              <caret line="85" selection-start-line="85" selection-end-line="85" />
+            <state relative-caret-position="425">
+              <caret line="25" column="14" selection-start-line="24" selection-end-line="25" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/ch05/TypelessLambda.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="17" selection-start-line="17" selection-end-line="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/test/scala/ch05/TypelessLambda.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="442">
+              <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
             </state>
           </provider>
         </entry>
@@ -87,7 +105,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.sbt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="28">
+            <state relative-caret-position="34">
               <caret line="2" selection-start-line="2" selection-end-line="2" />
             </state>
           </provider>
@@ -132,6 +150,7 @@
         <option value="$PROJECT_DIR$/src/main/scala/ch03/Simplelanguage.scala" />
         <option value="$PROJECT_DIR$/src/test/scala/ch03/SimpleLanguageSpec.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/ch04/ML.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/ch05/TypelessLambda.scala" />
       </list>
     </option>
   </component>
@@ -141,11 +160,11 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
-    <option name="x" value="1081" />
-    <option name="y" value="169" />
-    <option name="width" value="1440" />
-    <option name="height" value="803" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-2560" />
+    <option name="y" value="-208" />
+    <option name="width" value="2560" />
+    <option name="height" value="1417" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -198,6 +217,14 @@
               <item name="tapl-in-scala" type="b2602c69:ProjectViewProjectNode" />
               <item name="TaPL-in-Scala" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="scala" type="462c0819:PsiDirectoryNode" />
+              <item name="ch05" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tapl-in-scala" type="b2602c69:ProjectViewProjectNode" />
+              <item name="TaPL-in-Scala" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="test" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -218,7 +245,10 @@
             <path>
               <item name="tapl-in-scala" type="b2602c69:ProjectViewProjectNode" />
               <item name="TaPL-in-Scala" type="462c0819:PsiDirectoryNode" />
-              <item name="target" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+              <item name="scala" type="462c0819:PsiDirectoryNode" />
+              <item name="ch05" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -232,6 +262,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -240,7 +271,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.Color Scheme Font" />
+    <property name="settings.editor.selected.configurable" value="preferences.Scalafmt" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -254,7 +285,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="ScalaTest.TypelessLambdaSpec.TypelessLambda should have test">
     <configuration name="Main" type="Application" factoryName="アプリケーション" temporary="true">
       <option name="MAIN_CLASS_NAME" value="ch03.Main" />
       <module name="tapl-in-scala" />
@@ -281,6 +312,30 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="TypelessLambdaSpec.TypelessLambda should have test" type="ScalaTestRunConfiguration" factoryName="ScalaTest" temporary="true">
+      <module name="tapl-in-scala" />
+      <setting name="path" value="ch05.TypelessLambdaSpec" />
+      <setting name="vmparams" value="" />
+      <setting name="params" value="" />
+      <setting name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <setting name="searchForTest" value="Across module dependencies" />
+      <setting name="showProgressMessages" value="true" />
+      <setting name="useSbt" value="false" />
+      <setting name="useUiWithSbt" value="false" />
+      <setting name="jrePath" value="" />
+      <envs />
+      <setting name="testKind" value="Test name" />
+      <setting name="path" value="ch05.TypelessLambdaSpec" />
+      <setting name="testName" value="TypelessLambda should have test" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="ScalaTest.TypelessLambdaSpec.TypelessLambda should have test" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SbtLocalSettings">
     <option name="availableProjects">
@@ -295,7 +350,7 @@
           <value>
             <list>
               <ExternalProjectPojo>
-                <option name="name" value="root [file:/Users/yumuuu/src/TaPL-in-Scala/]" />
+                <option name="name" value="root [file:/Users/s03165/workspace/TaPL-in-Scala/]" />
                 <option name="path" value="$PROJECT_DIR$" />
               </ExternalProjectPojo>
             </list>
@@ -321,6 +376,9 @@
       </map>
     </option>
   </component>
+  <component name="ScalafmtSettings">
+    <option name="formatOnSave" value="true" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -333,11 +391,17 @@
       <updated>1562086722441</updated>
       <workItem from="1563533213021" duration="6000" />
       <workItem from="1563787395301" duration="2876000" />
+      <workItem from="1566445627842" duration="685000" />
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="TypelessLambdaSpec_TypelessLambda_should_have_test - 2019.08.22 at 12h 51m 35s.xml">
+      <configuration name="TypelessLambdaSpec.TypelessLambda should have test" configurationId="ScalaTestRunConfiguration" />
+    </history-entry>
+  </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8215000" />
+    <option name="totallyTimeSpent" value="8900000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -349,10 +413,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="-2560" y="-208" width="2560" height="1417" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16237482" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.10683082" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -361,13 +425,13 @@
       <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.11566265" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.3116981" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32970297" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32891566" />
-      <window_info active="true" anchor="bottom" id="sbt-shell-toolwindow" order="8" visible="true" weight="0.35180724" />
+      <window_info anchor="bottom" id="sbt-shell-toolwindow" order="8" weight="0.24754716" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32891566" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Build" order="11" weight="0.32771084" />
@@ -375,6 +439,8 @@
       <window_info anchor="bottom" id="SBT Console" order="13" />
       <window_info anchor="bottom" id="Docker" order="14" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="15" />
+      <window_info anchor="right" id="PlantUML" />
+      <window_info anchor="right" id="SciView" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -433,23 +499,16 @@
     <entry file="file://$PROJECT_DIR$/src/main/scala/ch03/scrap.scala" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/ch03/README.md" />
     <entry file="file://$PROJECT_DIR$/src/main/scala/ch03/scrap/solveRPN.sc" />
-    <entry file="file://$PROJECT_DIR$/build.sbt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/ch03/Simplelanguage.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
+        <state relative-caret-position="1037">
           <caret line="61" selection-start-line="61" selection-end-line="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/scala/ch03/SimpleLanguageSpec.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1506">
+        <state relative-caret-position="2941">
           <caret line="176" selection-start-line="176" selection-end-line="176" />
           <folding>
             <element signature="e#14#67#0" expanded="true" />
@@ -457,10 +516,31 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/build.sbt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" selection-start-line="2" selection-end-line="2" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/scala/ch04/ML.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="197">
-          <caret line="85" selection-start-line="85" selection-end-line="85" />
+        <state relative-caret-position="425">
+          <caret line="25" column="14" selection-start-line="24" selection-end-line="25" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/scala/ch05/TypelessLambda.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="27" column="32" selection-start-line="27" selection-start-column="32" selection-end-line="27" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/ch05/TypelessLambda.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
