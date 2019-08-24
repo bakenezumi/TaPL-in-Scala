@@ -126,11 +126,71 @@ object TypelessLambda {
 
 }
 
-object Test {
-  val tru = (x: Any) => (y: Any) => x
-  val fal = (x: Any) => (y: Any) => y
-  val test = (b: Any => Any => Any) => (m: Any) => (n: Any) => b(m)(n)
-  val pair: Any => Any => (Any => Any => Any) => Any = (f: Any) =>
-    (s: Any) => (b: Any => Any => Any) => b(f)(s)
+object WithScalaFunction {
+  // λx.t  ::  (x: Any) => t
+  // t t    ::  t(t)
+  implicit class DirtyAny(self: Any) {
+    def apply(that: Any): Any = self match {
+      case f: (Any => Any) => f(that)
+    }
+  }
 
+  val tru = (x: Any) => (_: Any) => x
+  val fls = (_: Any) => (y: Any) => y
+  type B = Any => Any => Any
+  val test = (b: B) =>
+    (m: Unit => Any) => (n: Unit => Any) => b(m)(n).asInstanceOf[Unit => Any]()
+  val and = (a: Any => Any => Any) =>
+    (b: B) => a(b)(fls).asInstanceOf[Any => Any => Any]
+  val or = (a: B) => (b: B) => a(tru)(b).asInstanceOf[Any => Any => Any]
+  val pair = (f: Any) => (s: Any) => (b: B) => b(f)(s)
+  type P = B => Any
+  val fst = (p: P) => p(tru)
+  val snd = (p: P) => p(fls)
+  val c0 = (s: Any => Any) => (z: Any) => z
+  val c1 = (s: Any => Any) => (z: Any) => s(z)
+  val c2 = (s: Any => Any) => (z: Any) => s(s(z))
+  type C = (Any => Any) => Any => Any
+
+  def cToInt(x: Any) = x match {
+    case c: C => c(_.asInstanceOf[Int] + 1)(0).asInstanceOf[Int]
+  }
+
+  val succ = (n: C) => (s: Any => Any) => (z: Any) => s(n(s)(z))
+  val plus = (n: C) => (m: C) => (s: Any => Any) => (z: Any) => n(s)(m(s)(z))
+  val times = (n: C) =>
+    (m: C) => n(plus(m).asInstanceOf[Any => Any])(c0).asInstanceOf[C]
+  //λn.λs.λz.n (λx.λy. y (x s)) (λx.z) (λx.x)
+  val pred = (n: C) =>
+    (s: Any => Any) =>
+      (z: Any) =>
+        n((x: Any) => (y: Any) => y(x(s)))((_: Any) => z)((x: Any) => x)
+
+  //(λx.x x) (λx. x x)
+  //val omega = ((x: Any => Any) => x(x)) { case x: (Any => Any) => x(x) }
+
+  // Y = λf.(λx.f (x x)) (λx.f (x x))
+  val y = (f: Any => Any => Any) =>
+    ((x: Any => Any => Any) => x(f)(x(x)))(x => f(x(x)))
+
+  // Z = λf.(λx.f (λy.x x y)) (λx.f (λy.x x y))
+  val z = (f: Any => Any => Any) =>
+    ((x: Any => Any => Any) => f((y: Any) => x(x)(y)))(
+      x => f((y: Any) => x(x)(y))
+  )
+
+  val fctWithInt =
+    z {
+      case f: (Int => Int) => {
+        case x: Int =>
+          if (x - 1 == 0) 1
+          else x * f(x - 1)
+      }
+    }
+
+  val iszero = (x: C) => x(_ => fls)(tru)
+
+  val fct = z(f =>
+    x =>
+      test(iszero(pred(x)))((_: Any) => c1)((_: Any) => times(x)(f(pred(x)))))
 }
