@@ -130,6 +130,10 @@ object WithScalaFunction {
   // λx.t  ::  (x: Any) => t
   // t t    ::  t(t)
   implicit class DirtyAny(self: Any) {
+    def apply(): Any = self match {
+      case f: (Unit => Any) => f()
+    }
+
     def apply(that: Any): Any = self match {
       case f: (Any => Any) => f(that)
     }
@@ -138,8 +142,7 @@ object WithScalaFunction {
   val tru = (x: Any) => (_: Any) => x
   val fls = (_: Any) => (y: Any) => y
   type B = Any => Any => Any
-  val test = (b: B) =>
-    (m: Unit => Any) => (n: Unit => Any) => b(m)(n).asInstanceOf[Unit => Any]()
+  val test = (b: B) => (m: Unit => Any) => (n: Unit => Any) => b(m)(n)()
   val and = (a: Any => Any => Any) =>
     (b: B) => a(b)(fls).asInstanceOf[Any => Any => Any]
   val or = (a: B) => (b: B) => a(tru)(b).asInstanceOf[Any => Any => Any]
