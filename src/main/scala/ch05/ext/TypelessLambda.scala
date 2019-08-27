@@ -155,14 +155,13 @@ object WithScalaFunction {
   val c2 = (s: Any => Any) => (z: Any) => s(s(z))
   type C = (Any => Any) => Any => Any
 
-  def cToInt(x: Any) = x match {
+  def realnat(x: Any) = x match {
     case c: C => c(_.asInstanceOf[Int] + 1)(0).asInstanceOf[Int]
   }
 
   val succ = (n: C) => (s: Any => Any) => (z: Any) => s(n(s)(z))
   val plus = (n: C) => (m: C) => (s: Any => Any) => (z: Any) => n(s)(m(s)(z))
-  val times = (n: C) =>
-    (m: C) => n(plus(m).asInstanceOf[Any => Any])(c0).asInstanceOf[C]
+  val times = (n: C) => (m: C) => n(plus(m))(c0).asInstanceOf[C]
   //λn.λs.λz.n (λx.λy. y (x s)) (λx.z) (λx.x)
   val pred = (n: C) =>
     (s: Any => Any) =>
