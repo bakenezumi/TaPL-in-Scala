@@ -191,5 +191,5 @@ object WithScalaFunction {
 
   val fct = z(f =>
     (x: Any) =>
-      test(iszero(pred(x)))((_: Any) => c1)((_: Any) => times(x)(f(pred(x)))))
+      test(iszero(pred(x)))((_: Unit) => c1)((_: Unit) => times(x)(f(pred(x)))))
 }
