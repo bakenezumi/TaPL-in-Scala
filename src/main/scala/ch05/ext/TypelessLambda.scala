@@ -2,7 +2,7 @@ package ch05.ext
 
 sealed trait Term
 final case class TmVar(value: Any) extends Term {
-  override def toString: String = s"`$value`"
+  override def toString: String = s"$value"
 }
 final case class TmAbs(x: Term, t: Term) extends Term {
   override def toString: String = s"λ($x.$t)"
@@ -27,17 +27,29 @@ object TypelessLambda {
 
   // substitution [x |-> s]t defined in TaPL p. 54
   def substitution(t: Term, s: Term): Term = {
-    println(s"substitution: $t <- $s")
-
-    t match {
+    println(s"  $t <- $s")
+    val ret = t match {
       case TmAbs(x, TmAbs(y, t1)) if x != y =>
+        println(1)
         TmAbs(y, substitution(t1, s))
       case TmAbs(_, TmApply(t1: TmAbs, t2: TmAbs)) =>
+        println(2)
         TmApply(substitution(t1, s), substitution(t2, s))
-      case TmAbs(x, y) if x == y => s
-      case TmAbs(_, y)           => y
-      case y                     => y
+      case TmAbs(x, y) if x == y =>
+        println(3)
+        s
+      case TmAbs(_, y) =>
+        println(4)
+        y
+      case _: TmVar =>
+        println(5)
+        s
+      case y =>
+        println(6)
+        y
     }
+    println(s"    $ret")
+    ret
   }
   def evalOne(t: Term): Term = {
     t match {
@@ -68,13 +80,13 @@ object TypelessLambda {
 //    TmApply(TmApply(TmApply(s, t), u), v)
   }
   // variables used in companion object
-  val x = TmVar("x")
-  val y = TmVar("y")
-  val p = TmVar("p")
-  val f = TmVar("f")
-  val m = TmVar("m")
-  val n = TmVar("n")
-  val t = TmVar("t")
+  val x = TmVar('x)
+  val y = TmVar('y)
+  val p = TmVar('p)
+  val f = TmVar('f)
+  val m = TmVar('m)
+  val n = TmVar('n)
+  val t = TmVar('t)
 
   // if-else
   val tru = lambda2(x, y, x)
@@ -87,8 +99,8 @@ object TypelessLambda {
   val snd = TmAbs(p, TmApply(p, fal))
 
   // charch number
-  val s = TmVar("s")
-  val z = TmVar("z")
+  val s = TmVar('s)
+  val z = TmVar('z)
 
   val c0 = lambda2(s, z, z)
   val c1 = lambda2(s, z, s(z))
@@ -97,20 +109,16 @@ object TypelessLambda {
 
   def mult: Term = lambda2(m, n, TmApply(m, TmApply(n, f)))
   def pred: Term = {
-    val g = TmVar("g")
-    val h = TmVar("h")
-    val u = TmVar("u")
-    val u2 = TmVar("u2")
+    val g = TmVar('g)
+    val h = TmVar('h)
+    val u = TmVar('u)
+    val u2 = TmVar('u2)
     val ff = lambda2(g, h, TmApply(h, TmApply(g, f)))
     val xx = TmAbs(u, x)
     val yy = TmAbs(u2, u2)
     lambda3(m, f, x, apply3(m, ff, xx, yy))
   }
-  def succ(n: Term): Term = {
-    //val nVal = eval(tmApply3(n, f, x))
-    val nVal = apply2(n, f, x)
-    lambda2(f, x, TmApply(f, nVal))
-  }
+  val succ = lambda3(n, s, z, s(n(s)(z)))
   def pred(n: Term): Term = TmApply(snd, n)
   def naturalNumber(n: Int): Term = {
     eval((0 until n).foldLeft[Term](c0)((t, _) => succ(t)))
