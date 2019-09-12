@@ -27,16 +27,16 @@ object TypelessLambda {
 
   // substitution [x |-> s]t defined in TaPL p. 54
   def substitution(t: Term, s: Term): Term = {
-    println(s"$t <- $s")
+    println(s"substitution: $t <- $s")
 
     t match {
       case TmAbs(x, TmAbs(y, t1)) if x != y =>
         TmAbs(y, substitution(t1, s))
       case TmAbs(_, TmApply(t1: TmAbs, t2: TmAbs)) =>
         TmApply(substitution(t1, s), substitution(t2, s))
-      case TmAbs(x, y: TmVar) if x == y => s
-      case TmAbs(_, y)                  => y
-      case y                            => y
+      case TmAbs(x, y) if x == y => s
+      case TmAbs(_, y)           => y
+      case y                     => y
     }
   }
   def evalOne(t: Term): Term = {
@@ -49,21 +49,22 @@ object TypelessLambda {
   }
   def eval(t: Term): Term =
     try {
+      println(t)
       eval(evalOne(t))
     } catch {
       case _: NoRuleAppliesException => t
     }
-  def tmLambda2(x: Term, y: Term, t: Term): TmAbs = {
+  def lambda2(x: Term, y: Term, t: Term): TmAbs = {
     lambda(x, lambda(y, t))
   }
-  def tmLambda3(x: Term, y: Term, z: Term, t: Term): TmAbs = {
-    lambda(x, tmLambda2(y, z, t))
+  def lambda3(x: Term, y: Term, z: Term, t: Term): TmAbs = {
+    lambda(x, lambda2(y, z, t))
   }
-  def tmApply3(s: Term, t: Term, u: Term): Term = {
+  def apply2(s: Term, t: Term, u: Term): Term = {
     TmApply(TmApply(s, t), u)
   }
-  def tmApply4(s: Term, t: Term, u: Term, v: Term): Term = {
-    tmApply3(TmApply(s, t), u, v)
+  def apply3(s: Term, t: Term, u: Term, v: Term): Term = {
+    apply2(TmApply(s, t), u, v)
 //    TmApply(TmApply(TmApply(s, t), u), v)
   }
   // variables used in companion object
@@ -73,11 +74,12 @@ object TypelessLambda {
   val f = TmVar("f")
   val m = TmVar("m")
   val n = TmVar("n")
+  val t = TmVar("t")
 
   // if-else
-  val tru = tmLambda2(x, y, x)
-  val fal = tmLambda2(x, y, y)
-  def test(u: Term, v: Term, w: Term): Term = tmApply3(u, v, w)
+  val tru = lambda2(x, y, x)
+  val fal = lambda2(x, y, y)
+  def test(u: Term, v: Term, w: Term): Term = apply2(u, v, w)
 
   // pair
   def pair(t: Term, u: Term): Term = TmAbs(x, test(x, t, u))
@@ -88,31 +90,30 @@ object TypelessLambda {
   val s = TmVar("s")
   val z = TmVar("z")
 
-  val zero = tmLambda2(s, z, z)
-  val one = tmLambda2(s, z, TmApply(s, z))
-  val two = tmLambda2(s, z, TmApply(s, TmApply(s, z)))
-  val three = tmLambda2(s, z, TmApply(s, TmApply(z, TmApply(s, z))))
-  val four = tmLambda2(s, z, TmApply(s, TmApply(s, TmApply(z, TmApply(s, z)))))
+  val c0 = lambda2(s, z, z)
+  val c1 = lambda2(s, z, s(z))
+  val c2 = lambda2(s, z, s(s(z)))
+  val c3 = lambda2(s, z, s(s(s(z))))
 
-  def mult: Term = tmLambda2(m, n, TmApply(m, TmApply(n, f)))
+  def mult: Term = lambda2(m, n, TmApply(m, TmApply(n, f)))
   def pred: Term = {
     val g = TmVar("g")
     val h = TmVar("h")
     val u = TmVar("u")
     val u2 = TmVar("u2")
-    val ff = tmLambda2(g, h, TmApply(h, TmApply(g, f)))
+    val ff = lambda2(g, h, TmApply(h, TmApply(g, f)))
     val xx = TmAbs(u, x)
     val yy = TmAbs(u2, u2)
-    tmLambda3(m, f, x, tmApply4(m, ff, xx, yy))
+    lambda3(m, f, x, apply3(m, ff, xx, yy))
   }
   def succ(n: Term): Term = {
     //val nVal = eval(tmApply3(n, f, x))
-    val nVal = tmApply3(n, f, x)
-    tmLambda2(f, x, TmApply(f, nVal))
+    val nVal = apply2(n, f, x)
+    lambda2(f, x, TmApply(f, nVal))
   }
   def pred(n: Term): Term = TmApply(snd, n)
   def naturalNumber(n: Int): Term = {
-    eval((0 until n).foldLeft[Term](zero)((t, _) => succ(t)))
+    eval((0 until n).foldLeft[Term](c0)((t, _) => succ(t)))
   }
 
   // fixed point combinator
