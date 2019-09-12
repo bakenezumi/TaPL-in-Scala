@@ -1,8 +1,8 @@
 package ch05.ext
 
 sealed trait Term
-final case class TmVar(value: String) extends Term {
-  override def toString: String = s"`${value.toString}`"
+final case class TmVar(value: Any) extends Term {
+  override def toString: String = s"`$value`"
 }
 final case class TmAbs(x: Term, t: Term) extends Term {
   override def toString: String = s"λ($x.$t)"
@@ -26,26 +26,24 @@ object TypelessLambda {
   final class NoRuleAppliesException(term: Term) extends RuntimeException
 
   // substitution [x |-> s]t defined in TaPL p. 54
-  def substitution(lambda: TmAbs, s: Term): Term = {
-    println(s"$lambda <- $s")
+  def substitution(t: Term, s: Term): Term = {
+    println(s"$t <- $s")
 
-    def replace(t: Term): Term = t match {
-      case v: TmVar if lambda.x == v => s
-      case v: TmVar                  => v
-      case TmAbs(x, t)               => TmAbs(replace(x), replace(t))
-      case TmApply(t1, t2)           => TmApply(replace(t1), replace(t2))
-    }
-
-    lambda.t match {
-      case v: TmVar        => replace(v)
-      case TmAbs(y, t1)    => TmAbs(replace(y), replace(t1))
-      case TmApply(t1, t2) => TmApply(replace(t1), replace(t2))
+    t match {
+      case TmAbs(x, TmAbs(y, t1)) if x != y =>
+        TmAbs(y, substitution(t1, s))
+      case TmAbs(_, TmApply(t1: TmAbs, t2: TmAbs)) =>
+        TmApply(substitution(t1, s), substitution(t2, s))
+      case TmAbs(x, y: TmVar) if x == y => s
+      case TmAbs(_, y)                  => y
+      case y                            => y
     }
   }
   def evalOne(t: Term): Term = {
     t match {
-      case TmApply(lambda: TmAbs, s) => substitution(lambda, s)
-      case TmApply(t1, t2)           => TmApply(evalOne(t1), t2)
+      case TmApply(v1: TmVar, t2)    => TmApply(v1, evalOne(t2)) // E-APP2
+      case TmApply(lambda: TmAbs, s) => substitution(lambda, s) // E-APPABS
+      case TmApply(t1, t2)           => TmApply(evalOne(t1), t2) // E-APP1
       case _                         => throw new NoRuleAppliesException(t)
     }
   }
