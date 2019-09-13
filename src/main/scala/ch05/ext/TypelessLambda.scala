@@ -29,23 +29,17 @@ object TypelessLambda {
   def substitution(t: Term, s: Term): Term = {
     println(s"  $t <- $s")
     val ret = t match {
-      case TmAbs(x, TmAbs(y, t1)) if x != y =>
-        println(1)
-        TmAbs(y, substitution(t1, s))
-      case TmAbs(_, TmApply(t1: TmAbs, t2: TmAbs)) =>
-        println(2)
-        TmApply(substitution(t1, s), substitution(t2, s))
       case TmAbs(x, y) if x == y =>
-        println(3)
+        println(1)
         s
+      case TmAbs(x, l @ TmAbs(y, t1)) if x != y =>
+        println(2)
+        TmAbs(y, substitution(l, s))
+      case TmAbs(_, TmApply(t1: TmAbs, t2: TmAbs)) =>
+        println(3)
+        TmApply(substitution(t1, s), substitution(t2, s))
       case TmAbs(_, y) =>
         println(4)
-        y
-      case _: TmVar =>
-        println(5)
-        s
-      case y =>
-        println(6)
         y
     }
     println(s"    $ret")
