@@ -26,40 +26,50 @@ object TypelessLambda {
   final class NoRuleAppliesException(term: Term) extends RuntimeException
 
   // substitution [x |-> s]t defined in TaPL p. 54
-  def substitution(t: Term, s: Term): Term = {
-    println(s"  $t <- $s")
+  def substitution(x: Term, t: Term, s: Term): Term = {
+    println(s"  [$x -> $s]$t")
     val ret = t match {
-      case TmAbs(x, y) if x == y =>
+      case y if x == y =>
         println(1)
         s
-      case TmAbs(x, l @ TmAbs(y, t1)) if x != y =>
+      case TmAbs(y, t1) if x != y =>
         println(2)
-        TmAbs(y, substitution(l, s))
-      case TmAbs(_, TmApply(t1: TmAbs, t2: TmAbs)) =>
+        TmAbs(y, substitution(x, t1, s))
+      case TmApply(t1, t2) =>
         println(3)
-        TmApply(substitution(t1, s), substitution(t2, s))
-      case TmAbs(_, y) =>
+        TmApply(substitution(x, t1, s), substitution(x, t2, s))
+      case y =>
         println(4)
-        y
+        evalOne(y)
     }
     println(s"    $ret")
     ret
   }
   def evalOne(t: Term): Term = {
+    println(t)
     t match {
-      case TmApply(v1: TmVar, t2)    => TmApply(v1, evalOne(t2)) // E-APP2
-      case TmApply(lambda: TmAbs, s) => substitution(lambda, s) // E-APPABS
-      case TmApply(t1, t2)           => TmApply(evalOne(t1), t2) // E-APP1
-      case _                         => throw new NoRuleAppliesException(t)
+      case TmApply(lambda: TmAbs, v: TmVar) =>
+        println("E-APPABS")
+        substitution(lambda.x, lambda.t, v) // E-APPABS
+      case TmApply(lambda: TmAbs, v: TmAbs) =>
+        println("E-APPABS'")
+        substitution(lambda.x, lambda.t, v) // E-APPABS
+      case TmApply(v1: TmVar, t2) =>
+        println("E-APP2")
+        TmApply(v1, evalOne(t2)) // E-APP2
+      case TmApply(v1: TmAbs, t2) =>
+        println("E-APP2'")
+        TmApply(v1, evalOne(t2)) // E-APP2
+      case TmApply(t1, t2) =>
+        println("E-APP1")
+        TmApply(evalOne(t1), t2) // E-APP1
+      case _ => t
     }
   }
-  def eval(t: Term): Term =
-    try {
-      println(t)
-      eval(evalOne(t))
-    } catch {
-      case _: NoRuleAppliesException => t
-    }
+  def eval(t: Term): Term = {
+    val t_ = evalOne(t)
+    if (t_ == t) t else eval(t_)
+  }
   def lambda2(x: Term, y: Term, t: Term): TmAbs = {
     lambda(x, lambda(y, t))
   }
@@ -74,13 +84,13 @@ object TypelessLambda {
 //    TmApply(TmApply(TmApply(s, t), u), v)
   }
   // variables used in companion object
-  val x = TmVar('x)
-  val y = TmVar('y)
-  val p = TmVar('p)
-  val f = TmVar('f)
-  val m = TmVar('m)
-  val n = TmVar('n)
-  val t = TmVar('t)
+  val x = TmVar("x")
+  val y = TmVar("y")
+  val p = TmVar("p")
+  val f = TmVar("f")
+  val m = TmVar("m")
+  val n = TmVar("n")
+  val t = TmVar("t")
 
   // if-else
   val tru = lambda2(x, y, x)
@@ -93,8 +103,8 @@ object TypelessLambda {
   val snd = TmAbs(p, TmApply(p, fal))
 
   // charch number
-  val s = TmVar('s)
-  val z = TmVar('z)
+  val s = TmVar("s")
+  val z = TmVar("z")
 
   val c0 = lambda2(s, z, z)
   val c1 = lambda2(s, z, s(z))
@@ -103,10 +113,10 @@ object TypelessLambda {
 
   def mult: Term = lambda2(m, n, TmApply(m, TmApply(n, f)))
   def pred: Term = {
-    val g = TmVar('g)
-    val h = TmVar('h)
-    val u = TmVar('u)
-    val u2 = TmVar('u2)
+    val g = TmVar("g")
+    val h = TmVar("h")
+    val u = TmVar("u")
+    val u2 = TmVar("u2")
     val ff = lambda2(g, h, TmApply(h, TmApply(g, f)))
     val xx = TmAbs(u, x)
     val yy = TmAbs(u2, u2)
