@@ -82,6 +82,7 @@ object TypelessLambda {
   def apply3(s: Term, t: Term, u: Term, v: Term): Term = {
     apply2(TmApply(s, t), u, v)
   }
+
   // variables used in companion object
   val x = TmVar("x")
   val y = TmVar("y")
@@ -98,13 +99,13 @@ object TypelessLambda {
 
   // if-else
   val tru = lambda2(x, y, x)
-  val fal = lambda2(x, y, y)
-  def test(u: Term, v: Term, w: Term): Term = apply2(u, v, w)
+  val fls = lambda2(x, y, y)
+  val test = lambda3(b, m, n, b(m)(n))
 
   // pair
-  def pair(t: Term, u: Term): Term = TmAbs(x, test(x, t, u))
-  val fst = TmAbs(p, TmApply(p, tru))
-  val snd = TmAbs(p, TmApply(p, fal))
+  val pair = lambda3(a, b, x, test(x)(a)(b))
+  val fst = lambda(p, p(tru))
+  val snd = lambda(p, p(fls))
 
   // charch number
   val s = TmVar("s")
@@ -127,6 +128,19 @@ object TypelessLambda {
             s,
             z,
             n(lambda(x, lambda(y, y(x(s)))))(lambda(x, z))(lambda(x, x)))
+
+  // Y = λf.(λx.f (x x)) (λx.f (x x))
+  val Y = lambda(f, lambda(x, f(x)(x))(lambda(x, f(x)(x))))
+
+  // Z = λf.(λx.f (λy.x x y)) (λx.f (λy.x x y))
+  val Z = lambda(
+    f,
+    lambda(x, f(lambda(y, x(x)(y))))(lambda(x, f(lambda(y, x(x)(y))))))
+
+  val iszero = lambda(x, x(lambda(y, fls))(tru))
+
+//  val fct = Z(
+//    lambda(f, lambda(x, test(iszero(pred(x)))(c1)(times(x)(f(pred(x)))))))
 
 }
 
