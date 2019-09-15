@@ -168,6 +168,7 @@ object WithScalaFunction {
   val c0 = (s: Any => Any) => (z: Any) => z
   val c1 = (s: Any => Any) => (z: Any) => s(z)
   val c2 = (s: Any => Any) => (z: Any) => s(s(z))
+  val c3 = (s: Any => Any) => (z: Any) => s(s(s(z)))
 
   def realnat(x: Any) =
     x { acc: Int =>
@@ -210,4 +211,9 @@ object WithScalaFunction {
   val fct = z(f =>
     (x: Any) =>
       test(iszero(pred(x)))((_: Unit) => c1)((_: Unit) => times(x)(f(pred(x)))))
+
+  val fib = z(f =>
+    (x: Any) =>
+      test(iszero(pred(x)))((_: Unit) => x)((_: Unit) =>
+        plus(f(pred(x)))(f(pred(pred(x))))))
 }
