@@ -29,23 +29,15 @@ object TypelessLambda {
   def substitution(x: Term, t: Term, s: Term): Term = {
     println(s"  [$x |-> $s]$t")
     val ret = t match {
-      case y if x == y =>
-        println(1)
-        s
-      case TmAbs(y, t1) if x != y =>
-        println(2)
-        TmAbs(y, substitution(x, t1, s))
+      case y if x == y            => s
+      case TmAbs(y, t1) if x != y => TmAbs(y, substitution(x, t1, s))
       case TmApply(t1, t2) =>
-        println(3)
         TmApply(substitution(x, t1, s), substitution(x, t2, s))
       case TmVar(y: String) if x.isInstanceOf[TmVar] && s.isInstanceOf[TmVar] =>
         TmVar(
           y.replaceAll(x.asInstanceOf[TmVar].value.toString,
                        s.asInstanceOf[TmVar].value.toString))
-      case y =>
-        println(4)
-        println(y)
-        y
+      case y => y
     }
     println(s"    $ret")
     ret
@@ -81,16 +73,23 @@ object TypelessLambda {
   def lambda3(x: Term, y: Term, z: Term, t: Term): TmAbs = {
     lambda(x, lambda2(y, z, t))
   }
+  def lambda4(a: Term, b: Term, c: Term, d: Term, t: Term): TmAbs = {
+    lambda(a, lambda3(b, c, d, t))
+  }
   def apply2(s: Term, t: Term, u: Term): Term = {
     TmApply(TmApply(s, t), u)
   }
   def apply3(s: Term, t: Term, u: Term, v: Term): Term = {
     apply2(TmApply(s, t), u, v)
-//    TmApply(TmApply(TmApply(s, t), u), v)
   }
   // variables used in companion object
   val x = TmVar("x")
   val y = TmVar("y")
+  val z = TmVar("z")
+  val a = TmVar("a")
+  val b = TmVar("b")
+  val c = TmVar("c")
+  val d = TmVar("d")
   val p = TmVar("p")
   val f = TmVar("f")
   val m = TmVar("m")
@@ -109,42 +108,25 @@ object TypelessLambda {
 
   // charch number
   val s = TmVar("s")
-  val z = TmVar("z")
 
   val c0 = lambda2(s, z, z)
   val c1 = lambda2(s, z, s(z))
   val c2 = lambda2(s, z, s(s(z)))
   val c3 = lambda2(s, z, s(s(s(z))))
 
-  val succ = lambda3(n, s, z, s(n(s)(z)))
   def realnat(charch: Term) =
     charch(lambda(x, TmVar("x + 1")))(TmVar("0"))
       .eval()
-      .asInstanceOf[TmVar]
-      .value
 
-  def mult: Term = lambda2(m, n, TmApply(m, TmApply(n, f)))
-  def pred: Term = {
-    val g = TmVar("g")
-    val h = TmVar("h")
-    val u = TmVar("u")
-    val u2 = TmVar("u2")
-    val ff = lambda2(g, h, TmApply(h, TmApply(g, f)))
-    val xx = TmAbs(u, x)
-    val yy = TmAbs(u2, u2)
-    lambda3(m, f, x, apply3(m, ff, xx, yy))
-  }
-  def pred(n: Term): Term = TmApply(snd, n)
-  def naturalNumber(n: Int): Term = {
-    eval((0 until n).foldLeft[Term](c0)((t, _) => succ(t)))
-  }
-
-  // fixed point combinator
-  val Y = {
-    val fx1 = TmAbs(x, TmApply(f, TmApply(x, x)))
-    val fx2 = TmAbs(x, TmApply(f, TmApply(x, x)))
-    TmAbs(f, TmApply(fx1, fx2))
-  }
+  val succ = lambda3(n, s, z, s(n(s)(z)))
+  val plus = lambda4(n, m, s, z, n(s)(m(s)(z)))
+  val times = lambda2(n, m, n(plus(m))(c0))
+  //λn.λs.λz.n (λx.λy. y (x s)) (λx.z) (λx.x)
+  val pred =
+    lambda3(n,
+            s,
+            z,
+            n(lambda(x, lambda(y, y(x(s)))))(lambda(x, z))(lambda(x, x)))
 
 }
 
