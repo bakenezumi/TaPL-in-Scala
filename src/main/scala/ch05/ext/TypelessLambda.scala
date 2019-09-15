@@ -27,7 +27,7 @@ object TypelessLambda {
 
   // substitution [x |-> s]t defined in TaPL p. 54
   def substitution(x: Term, t: Term, s: Term): Term = {
-    println(s"  [$x -> $s]$t")
+    println(s"  [$x |-> $s]$t")
     val ret = t match {
       case y if x == y =>
         println(1)
@@ -38,9 +38,14 @@ object TypelessLambda {
       case TmApply(t1, t2) =>
         println(3)
         TmApply(substitution(x, t1, s), substitution(x, t2, s))
+      case TmVar(y: String) if x.isInstanceOf[TmVar] && s.isInstanceOf[TmVar] =>
+        TmVar(
+          y.replaceAll(x.asInstanceOf[TmVar].value.toString,
+                       s.asInstanceOf[TmVar].value.toString))
       case y =>
         println(4)
-        evalOne(y)
+        println(y)
+        y
     }
     println(s"    $ret")
     ret
@@ -111,6 +116,13 @@ object TypelessLambda {
   val c2 = lambda2(s, z, s(s(z)))
   val c3 = lambda2(s, z, s(s(s(z))))
 
+  val succ = lambda3(n, s, z, s(n(s)(z)))
+  def realnat(charch: Term) =
+    charch(lambda(x, TmVar("x + 1")))(TmVar("0"))
+      .eval()
+      .asInstanceOf[TmVar]
+      .value
+
   def mult: Term = lambda2(m, n, TmApply(m, TmApply(n, f)))
   def pred: Term = {
     val g = TmVar("g")
@@ -122,7 +134,6 @@ object TypelessLambda {
     val yy = TmAbs(u2, u2)
     lambda3(m, f, x, apply3(m, ff, xx, yy))
   }
-  val succ = lambda3(n, s, z, s(n(s)(z)))
   def pred(n: Term): Term = TmApply(snd, n)
   def naturalNumber(n: Int): Term = {
     eval((0 until n).foldLeft[Term](c0)((t, _) => succ(t)))
