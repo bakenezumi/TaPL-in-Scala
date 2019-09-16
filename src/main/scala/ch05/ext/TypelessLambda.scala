@@ -12,7 +12,10 @@ final case class TmApply(t1: Term, t2: Term) extends Term {
 }
 
 object TypelessLambda {
-  def lambda(x: Term, t: Term) = TmAbs(x, t)
+  def lambda(xs: Term*) =
+    xs.init.init.foldRight(TmAbs(xs.init.last, xs.last))(TmAbs(_, _))
+  def apply(xs: Term*) =
+    xs.tail.tail.foldLeft(TmApply(xs.head, xs.tail.head))(TmApply(_, _))
 
   implicit class RichTerm(self: Term) {
     def apply(that: => Term): Term = {
@@ -22,8 +25,6 @@ object TypelessLambda {
       TypelessLambda.eval(self)
     }
   }
-
-  final class NoRuleAppliesException(term: Term) extends RuntimeException
 
   // substitution [x |-> s]t defined in TaPL p. 54
   def substitution(x: Term, t: Term, s: Term): Term = {
@@ -67,21 +68,6 @@ object TypelessLambda {
     val t_ = evalOne(t)
     if (t_ == t) t else eval(t_)
   }
-  def lambda2(x: Term, y: Term, t: Term): TmAbs = {
-    lambda(x, lambda(y, t))
-  }
-  def lambda3(x: Term, y: Term, z: Term, t: Term): TmAbs = {
-    lambda(x, lambda2(y, z, t))
-  }
-  def lambda4(a: Term, b: Term, c: Term, d: Term, t: Term): TmAbs = {
-    lambda(a, lambda3(b, c, d, t))
-  }
-  def apply2(s: Term, t: Term, u: Term): Term = {
-    TmApply(TmApply(s, t), u)
-  }
-  def apply3(s: Term, t: Term, u: Term, v: Term): Term = {
-    apply2(TmApply(s, t), u, v)
-  }
 
   // variables used in companion object
   val x = TmVar("x")
@@ -98,36 +84,41 @@ object TypelessLambda {
   val t = TmVar("t")
 
   // if-else
-  val tru = lambda2(x, y, x)
-  val fls = lambda2(x, y, y)
-  val test = lambda3(b, m, n, b(m)(n))
+  val tru = lambda(x, y, x)
+  val fls = lambda(x, y, y)
+  val test = lambda(b, m, n, b(m)(n))
 
   // pair
-  val pair = lambda3(a, b, x, test(x)(a)(b))
+  val pair = lambda(a, b, x, test(x)(a)(b))
   val fst = lambda(p, p(tru))
   val snd = lambda(p, p(fls))
 
   // charch number
   val s = TmVar("s")
 
-  val c0 = lambda2(s, z, z)
-  val c1 = lambda2(s, z, s(z))
-  val c2 = lambda2(s, z, s(s(z)))
-  val c3 = lambda2(s, z, s(s(s(z))))
+  val c0 = lambda(s, z, z)
+  val c1 = lambda(s, z, s(z))
+  val c2 = lambda(s, z, s(s(z)))
+  val c3 = lambda(s, z, s(s(s(z))))
 
-  def realnat(charch: Term) =
-    charch(lambda(x, TmVar("x + 1")))(TmVar("0"))
+  def realnat(charch: Term) = {
+    val expr = charch(lambda(x, TmVar("x + 1")))(TmVar("0"))
       .eval()
+    println(s"expr: $expr")
+    val scriptManager = new javax.script.ScriptEngineManager
+    val engine = scriptManager.getEngineByName("js")
+    engine.eval(expr.toString)
+  }
 
-  val succ = lambda3(n, s, z, s(n(s)(z)))
-  val plus = lambda4(n, m, s, z, n(s)(m(s)(z)))
-  val times = lambda2(n, m, n(plus(m))(c0))
+  val succ = lambda(n, s, z, s(n(s)(z)))
+  val plus = lambda(n, m, s, z, n(s)(m(s)(z)))
+  val times = lambda(n, m, n(plus(m))(c0))
   //λn.λs.λz.n (λx.λy. y (x s)) (λx.z) (λx.x)
   val pred =
-    lambda3(n,
-            s,
-            z,
-            n(lambda(x, lambda(y, y(x(s)))))(lambda(x, z))(lambda(x, x)))
+    lambda(n,
+           s,
+           z,
+           n(lambda(x, lambda(y, y(x(s)))))(lambda(x, z))(lambda(x, x)))
 
   // Y = λf.(λx.f (x x)) (λx.f (x x))
   val Y = lambda(f, lambda(x, f(x)(x))(lambda(x, f(x)(x))))
@@ -175,9 +166,8 @@ object WithScalaFunction {
       acc + 1
     }(0)
 
-  val succ = (n: Any) => (s: Any => Any) => (z: Any) => s(n(s)(z))
-  val plus = (n: Any) =>
-    (m: Any) => (s: Any => Any) => (z: Any) => n(s)(m(s)(z))
+  val succ = (n: Any) => (s: Any) => (z: Any) => s(n(s)(z))
+  val plus = (n: Any) => (m: Any) => (s: Any) => (z: Any) => n(s)(m(s)(z))
   val times = (n: Any) => (m: Any) => n(plus(m))(c0)
   //λn.λs.λz.n (λx.λy. y (x s)) (λx.z) (λx.x)
   val pred = (n: Any) =>
@@ -209,11 +199,11 @@ object WithScalaFunction {
   val iszero = (x: Any) => x((_: Any) => fls)(tru)
 
   val fct = z(f =>
-    (x: Any) =>
+    x =>
       test(iszero(pred(x)))((_: Unit) => c1)((_: Unit) => times(x)(f(pred(x)))))
 
   val fib = z(f =>
-    (x: Any) =>
+    x =>
       test(iszero(pred(x)))((_: Unit) => x)((_: Unit) =>
         plus(f(pred(x)))(f(pred(pred(x))))))
 }
