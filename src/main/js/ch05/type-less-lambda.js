@@ -18,3 +18,6 @@ const Lambda = {
 const fct = Lambda.z((f) => (x) => Lambda.test(Lambda.iszero(Lambda.pred(x)))(() => Lambda.c1)(() => Lambda.times(x)(f(Lambda.pred(x)))))
 const fib = Lambda.z((f) => (x) => Lambda.test(Lambda.iszero(Lambda.pred(x)))(() => x)(() => Lambda.plus(f(Lambda.pred(x)))(f(Lambda.pred(Lambda.pred(x))))))
 
+const c10 = Lambda.succ(Lambda.times(Lambda.c3)(Lambda.c3))
+console.log(Lambda.realnat(fct(c10)))
+console.log(Lambda.realnat(fib(c10)))
